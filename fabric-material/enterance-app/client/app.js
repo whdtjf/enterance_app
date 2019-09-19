@@ -31,9 +31,9 @@ app.controller('appController', function($scope, appFactory){
 
 	$scope.queryEnterance = function(){
 
-		var Holder = $scope.enterance_Holder; //html 파일에 enterance_Holder이라는 ng-model이 존재한다
+		var Timestamp = $scope.enterance_Timestamp; //html 파일에 enterance_Holder이라는 ng-model이 존재한다
 
-		appFactory.queryenterance(Holder, function(data){
+		appFactory.queryEnterance(Timestamp, function(data){
 			$scope.query_enterance = data;
 
 			if ($scope.query_enterance == "Could not locate enterance"){
@@ -45,19 +45,19 @@ app.controller('appController', function($scope, appFactory){
 		});
 	}
 
-	$scope.recordenterance = function(){
+	$scope.recordBarcode = function(){
 
-		appFactory.recordenterance($scope.enterance, function(data){
-			$scope.create_enterance = data;
+		appFactory.recordBarcode($scope.enterance, function(data){
+			$scope.create_barcode = data;
 			$("#success_create").show();
 		});
 	}
 
-	$scope.changeHolder = function(){
+	$scope.UpdateEnterance = function(){
 
-		appFactory.changeHolder($scope.holder, function(data){
-			$scope.change_holder = data;
-			if ($scope.change_holder == "Error: no enterance catch found"){
+		appFactory.UpdateEnterance($scope.timestamp, function(data){
+			$scope.update_timestamp = data;
+			if ($scope.update_timestamp == "Error: no enterance catch found"){
 				$("#error_holder").show();
 				$("#success_holder").hide();
 			} else{
@@ -74,14 +74,14 @@ app.factory('appFactory', function($http){
 	
 	var factory = {};
 
-    factory.queryAllenterance = function(callback){
+    factory.queryAllEnterance = function(callback){
 
     	$http.get('/get_all_enterance/').success(function(output){
 			callback(output)
 		});
 	}
 
-	factory.queryenterance = function(id, callback){
+	factory.queryEnterance = function(id, callback){
 		$http.get('/get_enterance/'+id)
 		.then(function success(output){
 			console.log(output);
@@ -92,22 +92,20 @@ app.factory('appFactory', function($http){
 		});
 	}
 
-	factory.recordenterance = function(data, callback){
+	factory.recordBarcode = function(data, callback){
 
-		data.location = data.longitude + ", "+ data.latitude;
+		var enterance = data.id + "-" + data.name + "-" + data.timestamp;
 
-		var enterance = data.id + "-" + data.location + "-" + data.timestamp + "-" + data.holder + "-" + data.vessel;
-
-    	$http.get('/add_enterance/'+enterance).success(function(output){
+    	$http.get('/add_barcode/'+enterance).success(function(output){
 			callback(output)
 		});
 	}
 
-	factory.changeHolder = function(data, callback){
+	factory.UpdateEnterance = function(data, callback){
 
-		var holder = data.id + "-" + data.name;
+		var updated_timestamp = data.id + "-" + data.timestamp;
 
-    	$http.get('/change_holder/'+holder).success(function(output){
+    	$http.get('/update_enterance/'+updated_timestamp).success(function(output){
 			callback(output)
 		});
 	}
