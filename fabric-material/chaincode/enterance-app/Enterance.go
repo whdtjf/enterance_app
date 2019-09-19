@@ -73,7 +73,7 @@
  func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Response {
 	 enterance := []Enterance{
 		 Enterance{Name: "JiWon", Timestamp: "1504054225"},
-		 Enterance{Vessel: "YoungChan", Timestamp: "1504057825"},
+		 Enterance{Name: "YoungChan", Timestamp: "1504057825"},
 	 }
  
 	 i := 0
